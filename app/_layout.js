@@ -13,10 +13,26 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="deftones"
+        options={{
+          title: 'Deftones',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="music" color={color} />,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="historia"
+        options={{
+          title: 'História',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="book" color={color} />,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
         name="aboutme"
         options={{
           title: 'Sobre',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
           headerShown: false,
         }}
       />
