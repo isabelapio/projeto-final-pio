@@ -1,44 +1,55 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, Dimensions, ScrollView } from "react-native";
-import Carousel from 'react-native-snap-carousel';
 
-const images = [
-  { id: 1, source: require('./assets/privatemusic.jpg') },
-  { id: 2, source: require('./assets/whitepony.jpg') },
-  { id: 3, source: require('./assets/diamondeyes.jpg') },
-];
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  Dimensions
+} from "react-native";
+import foto1 from "../assets/whitepony.png";
+import foto2 from "../assets/diamondeyes.jpg"
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get("window");
 
 export default function Page() {
   return (
     <View style={styles.container}>
-      {/* Carrossel de Imagens */}
-      <View style={styles.carouselContainer}>
-        <Carousel
-          data={images}
-          renderItem={({ item }) => (
-            <Image source={item.source} style={styles.carouselImage} />
-          )}
-          sliderWidth={screenWidth}
-          itemWidth={screenWidth * 0.8}
-          autoplay
-          loop
-        />
-      </View>
 
-      {/* Texto de Boas-Vindas */}
+      {/* Imagem de Destaque */}
+      <Image
+        source={require("../assets/privatemusic.jpg")}
+        style={styles.headerImage}
+      />
+
+      {/* Texto Central */}
       <View style={styles.mainText}>
-        <Text style={styles.title}>Bem-Vindo ao Universo Deftones!</Text>
-        <Text style={styles.subtitle}>Explore a música, história e a arte da banda.</Text>
+        <Text style={styles.title}>Bem-vindo ao Universo Deftones!</Text>
+        <Text style={styles.subtitle}>
+          Explore a música, história e a arte da banda.
+        </Text>
       </View>
 
-      {/* Seção de Botões de Navegação */}
-      <ScrollView horizontal style={styles.navigation}>
-        <Text style={styles.navButton}>Sobre a Banda</Text>
-        <Text style={styles.navButton}>História da Música</Text>
-        <Text style={styles.navButton}>Sobre o Criador</Text>
+      {/* Botões de Navegação */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.navigation}
+      >
+        <View style={styles.navButton}>
+          <Text style={styles.navButtonText}>Sobre a Banda</Text>
+          <Image source={foto1}></Image>
+        </View>
+
+        <View style={styles.navButton}>
+          <Text style={styles.navButtonText}>História da Música</Text>
+        </View>
+
+        <View style={styles.navButton}>
+          <Text style={styles.navButtonText}>Sobre o Criador</Text>
+        </View>
       </ScrollView>
+
     </View>
   );
 }
@@ -46,57 +57,48 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#212121', // Fundo escuro, moderno
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#1a1a1a",
+    alignItems: "center",
   },
-  carouselContainer: {
-    width: '100%',
-    height: 300,
-    marginBottom: 30,
-  },
-  carouselImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 15,
-    borderWidth: 5,
-    borderColor: '#FF9E00', // Borda de destaque
-    resizeMode: 'cover',
+  headerImage: {
+    width: screenWidth,
+    height: 240,
+    resizeMode: "cover",
+    borderBottomWidth: 4,
+    borderColor: "#FF9E00",
   },
   mainText: {
-    marginTop: 30,
-    alignItems: 'center',
+    marginTop: 25,
+    alignItems: "center",
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: '#FF9E00',
-    textShadowColor: '#000',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 10,
-    textAlign: 'center',
+    fontSize: 34,
+    fontWeight: "bold",
+    color: "#FF9E00",
+    textAlign: "center",
   },
   subtitle: {
-    fontSize: 24,
-    color: '#D1D1D1',
-    textAlign: 'center',
+    fontSize: 18,
+    color: "#CCCCCC",
+    textAlign: "center",
     marginTop: 10,
-    fontFamily: 'Roboto',
   },
   navigation: {
-    marginTop: 40,
-    marginBottom: 30,
+    marginTop: 35,
   },
   navButton: {
-    fontSize: 20,
-    color: '#FF9E00',
-    marginHorizontal: 20,
+    backgroundColor: "#2c2c2c",
     paddingVertical: 10,
     paddingHorizontal: 25,
-    borderWidth: 2,
-    borderColor: '#FF9E00',
     borderRadius: 25,
-    textAlign: 'center',
+    borderWidth: 2,
+    borderColor: "#FF9E00",
+    marginHorizontal: 10,
+  },
+  navButtonText: {
+    fontSize: 16,
+    color: "#FF9E00",
+    fontWeight: "bold",
   },
 });
