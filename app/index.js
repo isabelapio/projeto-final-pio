@@ -1,104 +1,144 @@
+import React, { useEffect, useRef } from "react";
+import { StyleSheet, Text, View, ScrollView, Animated, Easing } from "react-native";
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  Dimensions
-} from "react-native";
-import foto1 from "../assets/whitepony.png";
-import foto2 from "../assets/diamondeyes.jpg"
+export default function Home() {
+  const lines = [
+    "No escuro, acende.",
+    "No caos, cria.",
+    "No silêncio, explode.",
+    "Sempre além."
+  ];
 
-const { width: screenWidth } = Dimensions.get("window");
+  // Animação das linhas
+  const animValues = useRef(lines.map(() => new Animated.Value(50))).current;
+  const opacityValues = useRef(lines.map(() => new Animated.Value(0))).current;
 
-export default function Page() {
+  // Glow pulsante
+  const glowAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Animação das linhas
+    const animations = lines.map((_, i) =>
+      Animated.parallel([
+        Animated.timing(animValues[i], {
+          toValue: 0,
+          duration: 600,
+          delay: i * 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityValues[i], {
+          toValue: 1,
+          duration: 600,
+          delay: i * 300,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    Animated.stagger(200, animations).start();
+
+    // Glow pulsante
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowAnim, {
+          toValue: 1,
+          duration: 1500,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: false,
+        }),
+        Animated.timing(glowAnim, {
+          toValue: 0,
+          duration: 1500,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: false,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  // Interpolação para glow
+  const glowColor = glowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["rgba(138,43,226,0.3)", "rgba(138,43,226,0.8)"],
+  });
+
   return (
-    <View style={styles.container}>
-
-      {/* Imagem de Destaque */}
-      <Image
-        source={require("../assets/privatemusic.jpg")}
-        style={styles.headerImage}
-      />
-
-      {/* Texto Central */}
-      <View style={styles.mainText}>
-        <Text style={styles.title}>Bem-vindo ao Universo Deftones!</Text>
-        <Text style={styles.subtitle}>
-          Explore a música, história e a arte da banda.
-        </Text>
-      </View>
-
-      {/* Botões de Navegação */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.navigation}
+    <ScrollView contentContainerStyle={styles.container}>
+      <Animated.Text
+        style={[
+          styles.title,
+          {
+            textShadowColor: glowColor,
+            textShadowRadius: 15,
+          },
+        ]}
       >
-        <View style={styles.navButton}>
-          <Text style={styles.navButtonText}>Sobre a Banda</Text>
-          <Image source={foto1}></Image>
-        </View>
+        Início
+      </Animated.Text>
 
-        <View style={styles.navButton}>
-          <Text style={styles.navButtonText}>História da Música</Text>
-        </View>
-
-        <View style={styles.navButton}>
-          <Text style={styles.navButtonText}>Sobre o Criador</Text>
-        </View>
-      </ScrollView>
-
-    </View>
+      <Animated.View
+        style={[
+          styles.card,
+          {
+            borderColor: glowColor,
+            shadowColor: glowColor,
+          },
+        ]}
+      >
+        {lines.map((line, i) => (
+          <Animated.Text
+            key={i}
+            style={[
+              styles.line,
+              {
+                transform: [{ translateY: animValues[i] }],
+                opacity: opacityValues[i],
+              },
+            ]}
+          >
+            {line}
+          </Animated.Text>
+        ))}
+      </Animated.View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#1a1a1a",
+    padding: 30,
+    minHeight: "100%",
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgb(3, 3, 7)",
   },
-  headerImage: {
-    width: screenWidth,
-    height: 240,
-    resizeMode: "cover",
-    borderBottomWidth: 4,
-    borderColor: "#FF9E00",
-  },
-  mainText: {
-    marginTop: 25,
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
+
   title: {
-    fontSize: 34,
-    fontWeight: "bold",
-    color: "#FF9E00",
+    fontSize: 50,
+    fontWeight: "900",
+    color: "#ffffff",
+    letterSpacing: 4,
+    textTransform: "uppercase",
+    marginBottom: 40,
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: 380,
+    padding: 30,
+    borderRadius: 16,
+    backgroundColor: "rgba(138, 43, 226, 0.25)",
+    borderWidth: 1,
+    shadowOpacity: 0.6,
+    shadowRadius: 12,
+    gap: 15,
+    alignItems: "center",
+  },
+
+  line: {
+    fontSize: 26,
+    fontWeight: "700",
+    color: "#eaeaea",
+    letterSpacing: 1,
     textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#CCCCCC",
-    textAlign: "center",
-    marginTop: 10,
-  },
-  navigation: {
-    marginTop: 35,
-  },
-  navButton: {
-    backgroundColor: "#2c2c2c",
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: "#FF9E00",
-    marginHorizontal: 10,
-  },
-  navButtonText: {
-    fontSize: 16,
-    color: "#FF9E00",
-    fontWeight: "bold",
   },
 });
