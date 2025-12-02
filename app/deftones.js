@@ -1,204 +1,208 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import React from "react";
+import { View, Text, StyleSheet, ScrollView, ImageBackground, Image } from "react-native";
 
-export default function DeftonesPage() {
-  const [expanded, setExpanded] = useState(null);
-  const toggle = (id) => setExpanded(expanded === id ? null : id);
+export default function DeftonesScreen() {
+  const members = [
+    {
+      name: "Chino Moreno",
+      role: "Vocal / Guitarra",
+      photo: "https://i.redd.it/chino-moreno-montreal-2025-v0-igffaruuogof1.jpg?width=3001&format=pjpg&auto=webp&s=3da50f4db61f70502968e89b0478733359b8efef",
+    },
+    {
+      name: "Stephen Carpenter",
+      role: "Guitarra",
+      photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTowxhykpUyjka7cxFbLflM0f8JYzbfqAVgkw&s",
+    },
+    {
+      name: "Sergio Vega (ex-membro)",
+      role: "Baixo",
+      photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3_iD8KZUW6JNJDsNN7mx9afREC0Zmb0YkQw&s",
+    },
+    {
+      name: "Frank Delgado",
+      role: "Teclados / Samples",
+      photo: "https://upload.wikimedia.org/wikipedia/commons/1/15/Deftones%27_Frank_Delgado_on_June_10th%2C_2017_by_Chris_Schwegler.jpg",
+    },
+    {
+      name: "Abe Cunningham",
+      role: "Bateria",
+      photo: "https://moderndrummer.com/wp-content/uploads/2011/06/Abe-Cunningham-004-218x300.jpg",
+    },
+  ];
+
+  const albums = [
+    {
+      title: "White Pony",
+      year: "2000",
+      cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSh73XkVgn4MgO_cWUxNOFKFU5cGibnq0V_g&s",
+    },
+    {
+      title: "Diamond Eyes",
+      year: "2010",
+      cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMzqGzpxzFtedtOAP80H91uUZHgcfM3FQDOA&s",
+    },
+    {
+      title: "Koi No Yokan",
+      year: "2012",
+      cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY49z6TioWJMn_cmZq3JopZ1VBsZ7lOfgM3Q&s",
+    },
+    {
+      title: "Ohms",
+      year: "2020",
+      cover: "https://akamai.sscdn.co/uploadfile/letras/albuns/0/0/e/4/951151598445341.jpg",
+    },
+  ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Deftones</Text>
 
-      {/* Introdução */}
-      <View style={styles.block}>
-        <Text style={styles.subtitle}>Quem são?</Text>
-        <Text style={styles.text}>
-          Deftones é uma banda americana de Sacramento, formada em 1988.  
-          Misturam intensidade e atmosfera, criando um som pesado e ao mesmo tempo etéreo.
-        </Text>
+      <Text style={styles.sectionTitle}>História</Text>
+      <Text style={styles.history}>
+        Formada em Sacramento nos anos 80, Deftones se tornou uma das bandas mais influentes do rock moderno.
+        Misturando agressividade, atmosfera e melodia, criaram uma sonoridade única que atravessa gerações.
+      </Text>
+
+      <Text style={styles.sectionTitle}>Integrantes</Text>
+
+      <View style={styles.membersContainer}>
+        {members.map((m, i) => (
+          <View style={styles.memberCard} key={i}>
+            <Image source={{ uri: m.photo }} style={styles.memberPhoto} />
+            <View style={styles.memberInfo}>
+              <Text style={styles.memberName}>{m.name}</Text>
+              <Text style={styles.memberRole}>{m.role}</Text>
+            </View>
+          </View>
+        ))}
       </View>
 
-      {/* Curiosidades */}
-      <Text style={styles.sectionTitle}>Curiosidades</Text>
-      <TouchableOpacity style={styles.card} onPress={() => toggle(1)}>
-        <Text style={styles.cardTitle}>• Origem do Nome</Text>
-        {expanded === 1 && (
-          <Text style={styles.cardText}>
-            “Deftones” combina “Def” (gíria musical dos anos 80) e “tones”, criando algo moderno e único.
-          </Text>
-        )}
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.card} onPress={() => toggle(2)}>
-        <Text style={styles.cardTitle}>• Álbum Icônico</Text>
-        {expanded === 2 && (
-          <Text style={styles.cardText}>
-            “White Pony” (2000) é considerado o ápice da banda, unindo peso, melodia e experimentação.
-          </Text>
-        )}
-      </TouchableOpacity>
-
-      {/* Mini Biografia dos Membros */}
-      <Text style={styles.sectionTitle}>Membros</Text>
-      <View style={styles.members}>
-        <View style={styles.memberCard}>
-          <Text style={styles.memberName}>Chino Moreno</Text>
-          <Text style={styles.memberRole}>Vocal & Guitarra</Text>
-        </View>
-        <View style={styles.memberCard}>
-          <Text style={styles.memberName}>Stephen Carpenter</Text>
-          <Text style={styles.memberRole}>Guitarra</Text>
-        </View>
-        <View style={styles.memberCard}>
-          <Text style={styles.memberName}>Abe Cunningham</Text>
-          <Text style={styles.memberRole}>Bateria</Text>
-        </View>
-        <View style={styles.memberCard}>
-          <Text style={styles.memberName}>Sergio Vega</Text>
-          <Text style={styles.memberRole}>Baixo</Text>
-        </View>
-      </View>
-
-      {/* Álbums */}
       <Text style={styles.sectionTitle}>Álbuns</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.albums}>
-        <View style={styles.albumCard}>
-          <Text style={styles.albumTitle}>White Pony</Text>
-        </View>
-        <View style={styles.albumCard}>
-          <Text style={styles.albumTitle}>Around the Fur</Text>
-        </View>
-        <View style={styles.albumCard}>
-          <Text style={styles.albumTitle}>Koi No Yokan</Text>
-        </View>
-        <View style={styles.albumCard}>
-          <Text style={styles.albumTitle}>Ohms</Text>
-        </View>
-      </ScrollView>
+
+      <View style={styles.albumsContainer}>
+        {albums.map((a, i) => (
+          <ImageBackground
+            key={i}
+            source={{ uri: a.cover }}
+            style={styles.albumCard}
+            imageStyle={{ borderRadius: 14 }}
+          >
+            {/* Overlay feito só com View, sem dependências */}
+            <View style={styles.overlay} />
+
+            <View style={styles.albumTextArea}>
+              <Text style={styles.albumTitle}>{a.title}</Text>
+              <Text style={styles.albumYear}>{a.year}</Text>
+            </View>
+          </ImageBackground>
+        ))}
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 30,
-    minHeight: "100%",
-    backgroundColor: "rgb(3, 3, 7)",
-    alignItems: "center",
-    gap: 35,
+    flex: 1,
+    backgroundColor: "rgb(10,10,15)",
+    padding: 20,
   },
 
   title: {
-    fontSize: 48,
+    fontSize: 52,
     fontWeight: "900",
-    color: "#e0e0ff", // azul clarinho, frio
+    color: "#fff",
+    textAlign: "center",
+    marginBottom: 25,
     letterSpacing: 4,
     textTransform: "uppercase",
-    textShadowColor: "rgba(70, 50, 200, 0.5)",
-    textShadowRadius: 10,
-  },
-
-  block: {
-    backgroundColor: "rgba(50, 35, 100, 0.3)", // roxo azulado suave
-    borderRadius: 12,
-    padding: 22,
-    maxWidth: 380,
-    borderWidth: 1,
-    borderColor: "rgba(70, 50, 200, 0.6)",
-  },
-
-  subtitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#cfcfff",
-    marginBottom: 10,
-  },
-
-  text: {
-    fontSize: 18,
-    color: "#e0e0ff",
-    lineHeight: 26,
   },
 
   sectionTitle: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: "#cfcfff",
-    marginBottom: -10,
+    fontSize: 28,
+    fontWeight: "800",
+    color: "#c5c5ff",
+    marginTop: 25,
+    marginBottom: 10,
   },
 
-  card: {
-    width: "100%",
-    maxWidth: 380,
-    backgroundColor: "rgba(70, 50, 200, 0.2)",
-    padding: 18,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "rgba(70, 50, 200, 0.5)",
-    marginVertical: 8,
+  history: {
+    fontSize: 18,
+    color: "#dcdcdc",
+    lineHeight: 26,
   },
 
-  cardTitle: {
-    fontSize: 20,
-    color: "#e0e0ff",
-    fontWeight: "700",
-  },
-
-  cardText: {
+  /* INTEGRANTES */
+  membersContainer: {
     marginTop: 10,
-    fontSize: 16,
-    color: "#dcdcff",
-    lineHeight: 22,
-  },
-
-  members: {
-    width: "100%",
-    maxWidth: 380,
-    gap: 12,
+    gap: 20,
   },
 
   memberCard: {
-    backgroundColor: "rgba(70, 50, 200, 0.2)",
-    padding: 15,
-    borderRadius: 12,
+    flexDirection: "row",
+    backgroundColor: "rgba(255,255,255,0.05)",
+    padding: 14,
+    borderRadius: 14,
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: "rgba(70,50,200,0.5)",
+    borderColor: "rgba(255,255,255,0.1)",
+  },
+
+  memberPhoto: {
+    width: 70,
+    height: 70,
+    borderRadius: 10,
+    marginRight: 14,
+  },
+
+  memberInfo: {
+    flex: 1,
   },
 
   memberName: {
-    fontSize: 18,
+    fontSize: 20,
+    color: "#fff",
     fontWeight: "700",
-    color: "#e0e0ff",
   },
 
   memberRole: {
     fontSize: 16,
-    color: "#dcdcff",
-    marginTop: 2,
+    color: "#bbb",
   },
 
-  albums: {
-    width: "100%",
-    marginTop: 12,
-    flexDirection: "row",
-    gap: 12,
+  /* ÁLBUNS */
+  albumsContainer: {
+    marginTop: 10,
+    gap: 20,
   },
 
   albumCard: {
-    backgroundColor: "rgba(50, 35, 100, 0.25)",
-    width: 140,
-    height: 140,
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(70,50,200,0.5)",
+    height: 180,
+    justifyContent: "flex-end",
+    borderRadius: 14,
+    overflow: "hidden",
+  },
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.55)", // efeito parecido com gradient escuro
+  },
+
+  albumTextArea: {
+    padding: 15,
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
   },
 
   albumTitle: {
-    color: "#e0e0ff",
-    fontWeight: "700",
-    textAlign: "center",
-    paddingHorizontal: 5,
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#fff",
+  },
+
+  albumYear: {
+    fontSize: 16,
+    color: "#ccc",
   },
 });

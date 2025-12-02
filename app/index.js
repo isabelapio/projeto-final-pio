@@ -1,144 +1,224 @@
 import React, { useEffect, useRef } from "react";
-import { StyleSheet, Text, View, ScrollView, Animated, Easing } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Animated,
+  Easing,
+  StatusBar,
+  Dimensions,
+} from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 export default function Home() {
-  const lines = [
-    "No escuro, acende.",
-    "No caos, cria.",
-    "No silêncio, explode.",
-    "Sempre além."
-  ];
+  const fade = useRef(new Animated.Value(0)).current;
+  const translate = useRef(new Animated.Value(30)).current;
+  const bgMove = useRef(new Animated.Value(0)).current;
 
-  // Animação das linhas
-  const animValues = useRef(lines.map(() => new Animated.Value(50))).current;
-  const opacityValues = useRef(lines.map(() => new Animated.Value(0))).current;
-
-  // Glow pulsante
-  const glowAnim = useRef(new Animated.Value(0)).current;
+  const pulse = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    // Animação das linhas
-    const animations = lines.map((_, i) =>
-      Animated.parallel([
-        Animated.timing(animValues[i], {
-          toValue: 0,
-          duration: 600,
-          delay: i * 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacityValues[i], {
-          toValue: 1,
-          duration: 600,
-          delay: i * 300,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    Animated.stagger(200, animations).start();
+    Animated.parallel([
+      Animated.timing(fade, {
+        toValue: 1,
+        duration: 900,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+      Animated.timing(translate, {
+        toValue: 0,
+        duration: 900,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+    ]).start();
 
-    // Glow pulsante
+    Animated.loop(
+      Animated.timing(bgMove, {
+        toValue: 1,
+        duration: 9000,
+        easing: Easing.inOut(Easing.sin),
+        useNativeDriver: true,
+      })
+    ).start();
+
     Animated.loop(
       Animated.sequence([
-        Animated.timing(glowAnim, {
-          toValue: 1,
-          duration: 1500,
-          easing: Easing.inOut(Easing.sin),
-          useNativeDriver: false,
+        Animated.timing(pulse, {
+          toValue: 1.08,
+          duration: 1000,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
         }),
-        Animated.timing(glowAnim, {
-          toValue: 0,
-          duration: 1500,
-          easing: Easing.inOut(Easing.sin),
-          useNativeDriver: false,
+        Animated.timing(pulse, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
         }),
       ])
     ).start();
   }, []);
 
-  // Interpolação para glow
-  const glowColor = glowAnim.interpolate({
+  const bgTranslate = bgMove.interpolate({
     inputRange: [0, 1],
-    outputRange: ["rgba(138,43,226,0.3)", "rgba(138,43,226,0.8)"],
+    outputRange: [-20, 20],
   });
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Animated.Text
-        style={[
-          styles.title,
-          {
-            textShadowColor: glowColor,
-            textShadowRadius: 15,
-          },
-        ]}
-      >
-        Início
-      </Animated.Text>
+    <SafeAreaView style={styles.safe}>
+      <StatusBar barStyle="light-content" />
 
+      {/* CAMADA 1 — GLASS LINES */}
       <Animated.View
         style={[
-          styles.card,
-          {
-            borderColor: glowColor,
-            shadowColor: glowColor,
-          },
+          styles.movingLines,
+          { transform: [{ translateX: bgTranslate }] },
+        ]}
+      />
+
+      {/* CAMADA 2 — SHAPES GRANDES */}
+      <View style={styles.bigShapes}>
+        <View style={[styles.circle, styles.c1]} />
+        <View style={[styles.circle, styles.c2]} />
+      </View>
+
+      {/* CAMADA 3 — PARTÍCULAS */}
+      <View style={styles.particles}>
+        {Array.from({ length: 14 }).map((_, i) => (
+          <View key={i} style={[styles.dot, { left: (i * 30) % width }]} />
+        ))}
+      </View>
+
+      {/* CONTEÚDO */}
+      <Animated.View
+        style={[
+          styles.content,
+          { opacity: fade, transform: [{ translateY: translate }] },
         ]}
       >
-        {lines.map((line, i) => (
-          <Animated.Text
-            key={i}
-            style={[
-              styles.line,
-              {
-                transform: [{ translateY: animValues[i] }],
-                opacity: opacityValues[i],
-              },
-            ]}
-          >
-            {line}
-          </Animated.Text>
-        ))}
+        <Text style={styles.heroTitle}>
+          Bem-vindo  
+          {"\n"}
+          <Text style={styles.gradientText}>ao lado mais denso do som. Continue e descubra.</Text>
+        </Text>
+
+        <Text style={styles.subtitle}>
+         Explore o restante do site e veja tudo o que preparei.
+        </Text>
+
+        <Animated.View style={{ transform: [{ scale: pulse }] }}>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Abaixo</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </Animated.View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 30,
-    minHeight: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgb(3, 3, 7)",
+  safe: {
+    flex: 1,
+    backgroundColor: "#03030B",
   },
 
-  title: {
-    fontSize: 50,
+  // ====== CAMADA 1 ======
+  movingLines: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width,
+    height,
+    opacity: 0.08,
+    backgroundColor: "transparent",
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: "#8A2BE2",
+  },
+
+  // ====== CAMADA 2 ======
+  bigShapes: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  circle: {
+    position: "absolute",
+    width: width * 1.4,
+    height: width * 1.4,
+    borderRadius: width * 1.4,
+    opacity: 0.14,
+  },
+
+  c1: { backgroundColor: "#8A2BE2", top: -220, right: -140 },
+  c2: { backgroundColor: "#0048FF", bottom: -260, left: -160 },
+
+  // ====== CAMADA 3 ======
+  particles: {
+    position: "absolute",
+    width,
+    height,
+  },
+
+  dot: {
+    position: "absolute",
+    width: 4,
+    height: 4,
+    borderRadius: 4,
+    backgroundColor: "#ffffff25",
+    top: Math.random() * height,
+  },
+
+  // ====== CONTEÚDO ======
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 28,
+  },
+
+  heroTitle: {
+    fontSize: 44,
+    color: "#fff",
+    textAlign: "center",
     fontWeight: "900",
-    color: "#ffffff",
-    letterSpacing: 4,
-    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 14,
+  },
+
+  gradientText: {
+    color: "#AA7BFF",
+    shadowColor: "#8A2BE2",
+    shadowOpacity: 0.6,
+    shadowRadius: 14,
+  },
+
+  subtitle: {
+    fontSize: 17,
+    color: "#EAE6FF",
+    opacity: 0.9,
+    textAlign: "center",
+    maxWidth: 330,
+    lineHeight: 24,
     marginBottom: 40,
   },
 
-  card: {
-    width: "100%",
-    maxWidth: 380,
-    padding: 30,
-    borderRadius: 16,
-    backgroundColor: "rgba(138, 43, 226, 0.25)",
-    borderWidth: 1,
-    shadowOpacity: 0.6,
-    shadowRadius: 12,
-    gap: 15,
-    alignItems: "center",
+  button: {
+    backgroundColor: "#8A2BE2",
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 12,
   },
 
-  line: {
-    fontSize: 26,
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
     fontWeight: "700",
-    color: "#eaeaea",
     letterSpacing: 1,
-    textAlign: "center",
   },
 });
